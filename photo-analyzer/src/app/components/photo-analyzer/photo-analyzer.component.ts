@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CameraService } from '../../services/camera.service';
 import { GeminiService } from '../../services/gemini.service';
-import { ESP32Service } from '../../services/esp32.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-photo-analyzer',
@@ -94,29 +92,15 @@ import { Subscription } from 'rxjs';
     }
   `]
 })
-export class PhotoAnalyzerComponent implements OnInit, OnDestroy {
+export class PhotoAnalyzerComponent {
   imageBase64: string | undefined;
   analysis: string | undefined;
   analyzing = false;
-  private subscription: Subscription | undefined;
 
   constructor(
     private cameraService: CameraService,
-    private geminiService: GeminiService,
-    private esp32Service: ESP32Service
+    private geminiService: GeminiService
   ) {}
-
-  ngOnInit() {
-    this.subscription = this.esp32Service.objectDetected$.subscribe(() => {
-      this.takePicture();
-    });
-  }
-
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   async takePicture() {
     try {
